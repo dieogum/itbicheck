@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITBI Check — Você pagou o valor certo?</title>
+  <meta name="description" content="Descubra em minutos se você está pagando ITBI a mais na compra do seu imóvel em São Paulo. Diagnóstico gratuito via WhatsApp." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #16a34a;
+      --green-light: #dcfce7;
+      --green-dark: #14532d;
+      --red: #dc2626;
+      --red-light: #fee2e2;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-600: #4b5563;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --white: #ffffff;
+      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body { font-family: var(--font); color: var(--gray-900); background: var(--white); line-height: 1.6; }
+
+    /* NAV */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 24px; border-bottom: 1px solid var(--gray-200);
+      position: sticky; top: 0; background: var(--white); z-index: 100;
+    }
+    .logo { font-size: 20px; font-weight: 800; color: var(--green); letter-spacing: -0.5px; }
+    .logo span { color: var(--gray-900); }
+    .nav-cta {
+      background: #25D366; color: var(--white); border: none; border-radius: 8px;
+      padding: 8px 16px; font-size: 14px; font-weight: 600; cursor: pointer;
+      text-decoration: none; display: flex; align-items: center; gap: 6px;
+    }
+
+    /* HERO */
+    .hero { background: linear-gradient(135deg, #f0fdf4 0%, #fff 60%); padding: 64px 24px 48px; text-align: center; }
+    .hero-badge {
+      display: inline-block; background: var(--red-light); color: var(--red);
+      font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 20px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 6vw, 48px); font-weight: 800; line-height: 1.15;
+      letter-spacing: -1px; color: var(--gray-900); max-width: 680px; margin: 0 auto 16px;
+    }
+    .hero h1 em { font-style: normal; color: var(--green); }
+    .hero p { font-size: clamp(15px, 2.5vw, 18px); color: var(--gray-600); max-width: 520px; margin: 0 auto 36px; }
+    .hero-btns { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+    @media (min-width: 480px) { .hero-btns { flex-direction: row; justify-content: center; } }
+    .btn-primary {
+      background: #25D366; color: var(--white); border: none; border-radius: 12px;
+      padding: 16px 28px; font-size: 16px; font-weight: 700; cursor: pointer;
+      text-decoration: none; display: flex; align-items: center; gap: 8px;
+      box-shadow: 0 4px 14px rgba(37,211,102,0.35); transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,211,102,0.4); }
+    .btn-secondary {
+      background: var(--white); color: var(--gray-800); border: 2px solid var(--gray-200);
+      border-radius: 12px; padding: 14px 28px; font-size: 16px; font-weight: 600;
+      cursor: pointer; text-decoration: none; display: flex; align-items: center; gap: 8px;
+      transition: border-color 0.15s;
+    }
+    .btn-secondary:hover { border-color: var(--green); }
+    .hero-disclaimer { margin-top: 16px; font-size: 13px; color: var(--gray-600); }
+
+    /* PROOF BAR */
+    .proof-bar { background: var(--gray-900); color: var(--white); padding: 28px 24px; text-align: center; }
+    .proof-bar .big-number { font-size: clamp(36px, 8vw, 64px); font-weight: 800; color: #4ade80; line-height: 1; }
+    .proof-bar p { font-size: 15px; color: #d1d5db; margin-top: 6px; max-width: 500px; margin-left: auto; margin-right: auto; }
+
+    /* SECTIONS */
+    section { padding: 64px 24px; max-width: 800px; margin: 0 auto; }
+    .section-label { font-size: 12px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    h2 { font-size: clamp(22px, 4vw, 32px); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 16px; }
+    .section-sub { font-size: 16px; color: var(--gray-600); margin-bottom: 40px; }
+
+    /* PROBLEM CARDS */
+    .problem-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+    @media (max-width: 520px) { .problem-cards { grid-template-columns: 1fr; } }
+    .problem-card { border: 1px solid var(--gray-200); border-radius: 14px; padding: 20px; }
+    .problem-card.bad { border-color: #fca5a5; background: #fff5f5; }
+    .problem-card.good { border-color: #86efac; background: #f0fdf4; }
+    .card-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .card-label.bad { color: var(--red); } .card-label.good { color: var(--green); }
+    .card-value { font-size: 28px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+    .card-value.bad { color: var(--red); } .card-value.good { color: var(--green); }
+    .card-desc { font-size: 13px; color: var(--gray-600); }
+    .card-diff { grid-column: 1 / -1; background: var(--gray-900); color: var(--white); border-radius: 14px; padding: 20px; text-align: center; }
+    .card-diff .diff-label { font-size: 13px; color: #9ca3af; margin-bottom: 4px; }
+    .card-diff .diff-value { font-size: 32px; font-weight: 800; color: #4ade80; }
+    .card-diff .diff-sub { font-size: 12px; color: #6b7280; margin-top: 4px; }
+
+    /* STEPS */
+    .steps-list { display: flex; flex-direction: column; gap: 24px; margin-top: 8px; }
+    .step-item { display: flex; gap: 16px; align-items: flex-start; }
+    .step-icon { width: 48px; height: 48px; border-radius: 12px; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .step-item h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+    .step-item p { font-size: 14px; color: var(--gray-600); }
+
+    /* LEGAL BOX */
+    .legal-box { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 16px; padding: 28px; display: flex; gap: 20px; align-items: flex-start; }
+    .legal-icon { font-size: 36px; flex-shrink: 0; }
+    .legal-box h3 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+    .legal-box p { font-size: 14px; color: var(--gray-600); line-height: 1.6; }
+
+    /* FAQ */
+    .faq-list { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+    .faq-item { border: 1px solid var(--gray-200); border-radius: 12px; overflow: hidden; }
+    .faq-q { width: 100%; text-align: left; background: none; border: none; padding: 16px 20px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; color: var(--gray-900); }
+    .faq-q span { font-size: 18px; color: var(--green); transition: transform 0.2s; }
+    .faq-item.open .faq-q span { transform: rotate(45deg); }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; font-size: 14px; color: var(--gray-600); line-height: 1.7; }
+    .faq-item.open .faq-a { max-height: 300px; }
+    .faq-a-inner { padding: 0 20px 16px; }
+
+    /* CTA FINAL */
+    .cta-final { background: linear-gradient(135deg, var(--green-dark), #166534); color: var(--white); text-align: center; padding: 64px 24px; }
+    .cta-final h2 { color: var(--white); max-width: 560px; margin: 0 auto 12px; }
+    .cta-final p { color: #bbf7d0; font-size: 16px; margin-bottom: 36px; }
+    .cta-final .btn-primary { display: inline-flex; background: #25D366; font-size: 17px; padding: 18px 36px; }
+    .cta-final .free-tag { display: inline-block; margin-top: 14px; font-size: 13px; color: #86efac; }
+
+    footer { background: var(--gray-100); padding: 24px; text-align: center; font-size: 12px; color: var(--gray-600); }
+    footer a { color: var(--green); text-decoration: none; }
+    .divider { border: none; border-top: 1px solid var(--gray-200); }
+    .example-note { font-size: 12px; color: var(--gray-600); margin-top: 12px; font-style: italic; }
+
+    /* CALCULADORA */
+    .calc-wrap { background: #f0fdf4; padding: 64px 24px; }
+    .calc-card { background: #fff; border-radius: 16px; padding: 28px; box-shadow: 0 2px 16px rgba(0,0,0,0.07); border: 1px solid #e5e7eb; }
+    .calc-input { width: 100%; padding: 12px 14px; border: 1.5px solid #d1d5db; border-radius: 10px; font-size: 15px; outline: none; transition: border-color .15s; font-family: var(--font); }
+    .calc-input:focus { border-color: #16a34a; }
+    .calc-label { font-size: 13px; font-weight: 600; color: #374151; display: block; margin-bottom: 6px; }
+    .calc-hint { font-size: 12px; color: #9ca3af; margin-top: 4px; }
+    .calc-btn { width: 100%; background: #16a34a; color: #fff; border: none; border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background .15s; font-family: var(--font); }
+    .calc-btn:hover { background: #15803d; }
+    .calc-btn:disabled { background: #9ca3af; cursor: not-allowed; }
+
+    /* Resultado da calculadora */
+    .res-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    @media (max-width: 480px) { .res-grid { grid-template-columns: 1fr; } }
+    .res-card { border-radius: 10px; padding: 14px; }
+    .res-card.bad { background: #fff5f5; border: 1px solid #fca5a5; }
+    .res-card.good { background: #f0fdf4; border: 1px solid #86efac; }
+    .res-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+    .res-tag.bad { color: #dc2626; } .res-tag.good { color: #16a34a; }
+    .res-base { font-size: 13px; color: #6b7280; margin-bottom: 2px; }
+    .res-val { font-size: 20px; font-weight: 800; }
+    .res-val.bad { color: #dc2626; } .res-val.good { color: #16a34a; }
+    .res-diff { background: #111827; color: #fff; border-radius: 10px; padding: 16px; text-align: center; margin-bottom: 16px; }
+    .res-diff-label { font-size: 12px; color: #9ca3af; margin-bottom: 4px; }
+    .res-diff-val { font-size: 28px; font-weight: 800; color: #4ade80; }
+    .res-diff-sub { font-size: 12px; color: #6b7280; margin-top: 4px; }
+    .res-ok { background: #f0fdf4; border: 1px solid #86efac; border-radius: 10px; padding: 14px; text-align: center; color: #166534; font-size: 14px; font-weight: 600; }
+    .res-addr { font-size: 13px; color: #374151; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #e5e7eb; }
+    .res-addr strong { display: block; font-size: 11px; color: #9ca3af; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 2px; }
+
+    /* Dropdown de resultados de endereço */
+    .addr-options { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .addr-option { border: 1.5px solid #e5e7eb; border-radius: 8px; padding: 10px 14px; cursor: pointer; font-size: 13px; color: #374151; transition: border-color .15s, background .15s; text-align: left; background: #fff; font-family: var(--font); }
+    .addr-option:hover { border-color: #16a34a; background: #f0fdf4; }
+
+    .wa-btn { display: block; background: #25D366; color: #fff; text-align: center; padding: 14px; border-radius: 10px; font-weight: 700; font-size: 15px; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">ITBI<span>Check</span></div>
+  <a href="https://wa.me/5511900000000?text=Oi!%20Quero%20verificar%20meu%20ITBI." class="nav-cta" target="_blank">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.126.558 4.121 1.533 5.859L.057 23.43a.75.75 0 00.914.914l5.57-1.476A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.726 9.726 0 01-4.962-1.358l-.356-.211-3.698.98.979-3.697-.211-.357A9.726 9.726 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+    Verificar agora
+  </a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">⚠️ Atenção compradores de imóveis em SP</div>
+  <h1>A Prefeitura de SP está cobrando <em>ITBI a mais</em> de quase todo mundo</h1>
+  <p>Descubra em minutos se você está pagando o valor correto — ou se tem dinheiro a recuperar. Diagnóstico 100% gratuito.</p>
+  <div class="hero-btns">
+    <a href="#calculadora" class="btn-primary">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.126.558 4.121 1.533 5.859L.057 23.43a.75.75 0 00.914.914l5.57-1.476A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.726 9.726 0 01-4.962-1.358l-.356-.211-3.698.98.979-3.697-.211-.357A9.726 9.726 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+      Vou comprar um imóvel
+    </a>
+    <a href="#calculadora" class="btn-secondary">Já comprei um imóvel</a>
+  </div>
+  <p class="hero-disclaimer">✓ Gratuito &nbsp;·&nbsp; ✓ Sem cadastro &nbsp;·&nbsp; ✓ Resultado na hora</p>
+</div>
+
+<!-- PROOF BAR -->
+<div class="proof-bar">
+  <div class="big-number">3%</div>
+  <p>É a alíquota do ITBI em SP. Cobrado sobre um valor inflado pela Prefeitura, pode significar <strong>R$ 5.000 a R$ 25.000 a mais</strong> no bolso de quem compra.</p>
+</div>
+
+<!-- PROBLEMA -->
+<section>
+  <div class="section-label">O problema</div>
+  <h2>Como a Prefeitura cobra mais do que deveria</h2>
+  <p class="section-sub">A base de cálculo do ITBI deveria ser o valor real da sua transação. A Prefeitura de SP usa o Valor Venal de Referência (VVR) — um número que ela mesma define e que costuma ser bem maior.</p>
+  <div class="problem-cards">
+    <div class="problem-card bad">
+      <div class="card-label bad">Como a Prefeitura cobra</div>
+      <div class="card-value bad">R$ 24.000</div>
+      <div class="card-desc">ITBI calculado sobre o VVR de R$ 800.000 (valor que a Prefeitura atribui ao imóvel)</div>
+    </div>
+    <div class="problem-card good">
+      <div class="card-label good">Como deveria ser cobrado</div>
+      <div class="card-value good">R$ 18.000</div>
+      <div class="card-desc">ITBI calculado sobre R$ 600.000 (valor real que você pagou pelo imóvel)</div>
+    </div>
+    <div class="card-diff">
+      <div class="diff-label">Você pagou a mais:</div>
+      <div class="diff-value">R$ 6.000</div>
+      <div class="diff-sub">Esse valor pode ser contestado ou recuperado</div>
+    </div>
+  </div>
+  <p class="example-note">* Exemplo ilustrativo. Decisão do STJ (Tema 1113) determina que a base de cálculo deve ser o valor de transação.</p>
+</section>
+
+<hr class="divider" />
+
+<!-- CALCULADORA -->
+<div class="calc-wrap" id="calculadora">
+  <div style="max-width:640px; margin:0 auto;">
+    <div class="section-label" style="text-align:center;">Calculadora gratuita</div>
+    <h2 style="text-align:center; margin-bottom:8px;">Quanto você deveria pagar de ITBI?</h2>
+    <p style="text-align:center; font-size:15px; color:#4b5563; margin-bottom:28px;">Digite o endereço do imóvel e o valor da compra — buscamos o VVR na Prefeitura automaticamente.</p>
+
+    <div class="calc-card">
+      <div style="display:flex; flex-direction:column; gap:16px;">
+
+        <!-- Campo endereço -->
+        <div>
+          <label class="calc-label">Endereço do imóvel</label>
+          <input id="inputEndereco" class="calc-input" type="text"
+            placeholder="ex: Rua Augusta, 1200 — ou só o nome da rua" />
+          <p class="calc-hint">Digite o nome da rua e o número. Só São Paulo capital.</p>
+          <!-- Opções quando há múltiplos resultados -->
+          <div id="addrOptions" class="addr-options" style="display:none;"></div>
+        </div>
+
+        <!-- Campo valor -->
+        <div>
+          <label class="calc-label">Valor da transação (R$)</label>
+          <input id="inputValor" class="calc-input" type="text"
+            placeholder="ex: R$ 650.000,00" oninput="mascararValor(this)" />
+          <p class="calc-hint">O valor que está (ou estará) na escritura.</p>
+        </div>
+
+        <button id="btnCalcular" class="calc-btn" onclick="calcular()">
+          Calcular agora
+        </button>
+      </div>
+
+      <!-- Loading -->
+      <div id="loading" style="display:none; text-align:center; padding:24px; color:#6b7280; font-size:14px;">
+        <div style="font-size:28px; margin-bottom:8px;">🔍</div>
+        <span id="loadingMsg">Buscando endereço no cadastro da Prefeitura...</span>
+      </div>
+
+      <!-- Erro -->
+      <div id="erro" style="display:none; margin-top:16px; background:#fee2e2; border-radius:10px; padding:14px; font-size:14px; color:#dc2626;"></div>
+
+      <!-- Resultado -->
+      <div id="resultado" style="display:none; margin-top:24px; padding-top:24px; border-top:1px solid #e5e7eb;">
+        <div id="resultadoConteudo"></div>
+      </div>
+    </div>
+
+    <p style="font-size:12px; color:#9ca3af; margin-top:12px; text-align:center;">
+      Dados consultados em tempo real no GeoSampa e no sistema oficial da Prefeitura de São Paulo.
+    </p>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- COMO FUNCIONA -->
+<section>
+  <div class="section-label">Como funciona</div>
+  <h2>Três passos. É tudo.</h2>
+  <p class="section-sub">Sem cadastro, sem formulário complexo, sem burocracia.</p>
+  <div class="steps-list">
+    <div class="step-item">
+      <div class="step-icon">📍</div>
+      <div>
+        <h3>1. Você informa o endereço e o valor</h3>
+        <p>Endereço do imóvel + valor que você pagou (ou vai pagar). Só isso.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-icon">🔍</div>
+      <div>
+        <h3>2. A gente consulta o VVR da Prefeitura</h3>
+        <p>Buscamos o Valor Venal de Referência no sistema da Prefeitura de SP e calculamos o que está sendo cobrado versus o que deveria ser.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-icon">💰</div>
+      <div>
+        <h3>3. Você vê o resultado na hora</h3>
+        <p>Você sabe exatamente o quanto pagou ou vai pagar a mais — e quais são os seus direitos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- QUEM SOMOS -->
+<section>
+  <div class="section-label">Quem somos</div>
+  <h2>Tecnologia e direito juntos pelo contribuinte</h2>
+  <p class="section-sub">O ITBI Check une análise de dados imobiliários com suporte jurídico especializado.</p>
+  <div class="legal-box">
+    <div class="legal-icon">⚖️</div>
+    <div>
+      <h3>Parceiro jurídico especializado em ITBI</h3>
+      <p>Nosso parceiro atua exclusivamente em direito tributário imobiliário em São Paulo. Se houver valor a recuperar, ele cuida de todo o processo administrativo ou judicial — sem custo antecipado para você. Pagamento só em caso de êxito.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- FAQ -->
+<section>
+  <div class="section-label">Dúvidas frequentes</div>
+  <h2>Perguntas comuns</h2>
+  <div class="faq-list">
+    <div class="faq-item" id="f1">
+      <button class="faq-q" onclick="toggleFaq('f1')">O diagnóstico é mesmo gratuito? <span>+</span></button>
+      <div class="faq-a"><div class="faq-a-inner">Sim, completamente. Verificar se você está pagando a mais não custa nada. Se quiser contestar o valor junto à Prefeitura ou buscar restituição na Justiça, aí existe um modelo de honorários de êxito — você paga uma porcentagem só se ganhar.</div></div>
+    </div>
+    <div class="faq-item" id="f2">
+      <button class="faq-q" onclick="toggleFaq('f2')">Comprei há 3 anos. Ainda posso recuperar? <span>+</span></button>
+      <div class="faq-a"><div class="faq-a-inner">Sim. O prazo legal para contestar o ITBI cobrado indevidamente é de 5 anos a partir do pagamento. Se você comprou entre 2020 e hoje e pagou sobre o VVR, muito provavelmente tem direito à restituição.</div></div>
+    </div>
+    <div class="faq-item" id="f3">
+      <button class="faq-q" onclick="toggleFaq('f3')">Isso é legal? A Prefeitura pode me prejudicar depois? <span>+</span></button>
+      <div class="faq-a"><div class="faq-a-inner">Totalmente legal. O STJ já decidiu em recurso repetitivo (Tema 1113) que a base de cálculo do ITBI deve ser o valor real da transação, não o VVR da Prefeitura. Você está exercendo um direito reconhecido pela mais alta corte tributária do país.</div></div>
+    </div>
+    <div class="faq-item" id="f4">
+      <button class="faq-q" onclick="toggleFaq('f4')">Quanto tempo leva para recuperar o dinheiro? <span>+</span></button>
+      <div class="faq-a"><div class="faq-a-inner">Pela via administrativa (pedido à Prefeitura): 6 a 18 meses em média. Pela via judicial: pode ser mais rápido dependendo do caso. Nosso parceiro te dará um prazo preciso após avaliar o seu caso.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<div class="cta-final">
+  <h2>Quanto a Prefeitura está cobrando de você?</h2>
+  <p>Descubra agora. É gratuito e leva menos de 2 minutos.</p>
+  <a href="#calculadora" class="btn-primary" style="display:inline-flex; background:#25D366; font-size:17px; padding:18px 36px;">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.126.558 4.121 1.533 5.859L.057 23.43a.75.75 0 00.914.914l5.57-1.476A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.726 9.726 0 01-4.962-1.358l-.356-.211-3.698.98.979-3.697-.211-.357A9.726 9.726 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+    Calcular meu ITBI agora
+  </a>
+  <div class="free-tag">✓ Gratuito · ✓ Sem cadastro · ✓ Resultado na hora</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 ITBI Check · São Paulo, SP · <a href="mailto:contato@itbicheck.com.br">contato@itbicheck.com.br</a></p>
+  <p style="margin-top:6px;">As informações deste site têm caráter informativo e não constituem assessoria jurídica. Consulte sempre um advogado.</p>
+</footer>
+
+<script>
+// ── FAQ ─────────────────────────────────────────────────────────
+function toggleFaq(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+// ── Helpers de valor ────────────────────────────────────────────
+function mascararValor(input) {
+  let v = input.value.replace(/\D/g, '');
+  if (v) {
+    v = (parseInt(v, 10) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+    input.value = 'R$ ' + v;
+  }
+}
+
+function parseBRL(str) {
+  if (!str) return 0;
+  return parseFloat(str.replace(/[R$\s.]/g, '').replace(',', '.')) || 0;
+}
+
+function fmt(n) {
+  return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+// ── Estado da calculadora ────────────────────────────────────────
+let sqlSelecionado = null;
+let enderecoSelecionado = '';
+
+// ── Passo 1: buscar endereço → SQL ──────────────────────────────
+async function calcular() {
+  const endStr = document.getElementById('inputEndereco').value.trim();
+  const valor  = parseBRL(document.getElementById('inputValor').value);
+
+  limpar();
+
+  if (!endStr) { erro('Informe o endereço do imóvel.'); return; }
+  if (!valor || valor < 1000) { erro('Informe o valor da transação (mínimo R$ 1.000).'); return; }
+
+  // Se o SQL já foi selecionado para este endereço, pula direto para o VVR
+  if (sqlSelecionado) {
+    await buscarVRRePresentar(sqlSelecionado, enderecoSelecionado, valor);
+    return;
+  }
+
+  loading('Buscando endereço no cadastro da Prefeitura...');
+
+  // Separa logradouro e número
+  const match  = endStr.match(/^(.*?)[,\s]+(\d+[A-Za-z]?)[\s,]*$/);
+  const logradouro = match ? match[1].trim() : endStr;
+  const numero     = match ? match[2].trim() : '';
+
+  try {
+    const params = new URLSearchParams({ logradouro, numero });
+    const resp = await fetch(`/api/sql?${params}`);
+    const data = await resp.json();
+
+    esconderLoading();
+
+    if (data.error) { erro(data.error); return; }
+
+    if (data.resultados.length === 1) {
+      // Único resultado: vai direto
+      sqlSelecionado     = data.resultados[0].sql;
+      enderecoSelecionado = data.resultados[0].endereco;
+      await buscarVRRePresentar(sqlSelecionado, enderecoSelecionado, valor);
+    } else {
+      // Múltiplos: mostra opções
+      mostrarOpcoes(data.resultados, valor);
+    }
+  } catch (e) {
+    esconderLoading();
+    erro('Não foi possível conectar. Tente novamente.');
+  }
+}
+
+function mostrarOpcoes(resultados, valor) {
+  const container = document.getElementById('addrOptions');
+  container.innerHTML = '<p style="font-size:13px;color:#374151;font-weight:600;margin-bottom:6px;">Encontramos mais de um imóvel. Selecione o correto:</p>';
+  container.style.display = 'flex';
+
+  resultados.slice(0, 6).forEach(r => {
+    const btn = document.createElement('button');
+    btn.className = 'addr-option';
+    btn.textContent = r.endereco || `SQL ${r.sql}`;
+    btn.onclick = async () => {
+      sqlSelecionado      = r.sql;
+      enderecoSelecionado = r.endereco;
+      container.style.display = 'none';
+      await buscarVRRePresentar(r.sql, r.endereco, valor);
+    };
+    container.appendChild(btn);
+  });
+}
+
+// ── Passo 2: SQL → VVR e cálculo ────────────────────────────────
+async function buscarVRRePresentar(sql, endereco, valor) {
+  loading('Consultando o Valor Venal de Referência...');
+
+  try {
+    const resp = await fetch(`/api/vrr?sql=${encodeURIComponent(sql)}`);
+    const data = await resp.json();
+
+    esconderLoading();
+
+    if (data.error) { erro(data.error); return; }
+
+    apresentarResultado(data, endereco || data.endereco, valor);
+  } catch (e) {
+    esconderLoading();
+    erro('Erro ao consultar o VVR. Tente novamente.');
+  }
+}
+
+// ── Renderiza o resultado ────────────────────────────────────────
+function apresentarResultado(data, endereco, valor) {
+  const vrr      = data.vrrNumero;
+  const itbiPref = vrr   * 0.03;
+  const itbiCerto = valor * 0.03;
+  const dif       = itbiPref - itbiCerto;
+  const temDif    = dif > 50; // margem mínima de R$50
+
+  const waMsg = encodeURIComponent(
+    `Oi! Fiz o diagnóstico no ITBI Check e descobri que ${dif > 0 ? 'paguei ' + fmt(dif) + ' a mais' : 'o valor está correto'} de ITBI. Endereço: ${endereco}`
+  );
+
+  document.getElementById('resultadoConteudo').innerHTML = `
+    <div class="res-addr">
+      <strong>Imóvel consultado</strong>
+      ${endereco || sqlSelecionado}
+    </div>
+
+    <div class="res-grid">
+      <div class="res-card bad">
+        <div class="res-tag bad">Prefeitura cobra (VVR)</div>
+        <div class="res-base">Base: ${fmt(vrr)}</div>
+        <div class="res-val bad">${fmt(itbiPref)}</div>
+      </div>
+      <div class="res-card good">
+        <div class="res-tag good">Deveria ser cobrado</div>
+        <div class="res-base">Base: ${fmt(valor)}</div>
+        <div class="res-val good">${fmt(itbiCerto)}</div>
+      </div>
+    </div>
+
+    ${temDif ? `
+      <div class="res-diff">
+        <div class="res-diff-label">Você pagou / vai pagar a mais:</div>
+        <div class="res-diff-val">${fmt(dif)}</div>
+        <div class="res-diff-sub">Esse valor pode ser contestado ou recuperado</div>
+      </div>
+      <a href="https://wa.me/5511900000000?text=${waMsg}" target="_blank" class="wa-btn">
+        💬 Falar com especialista agora
+      </a>
+    ` : `
+      <div class="res-ok">✅ O valor da sua transação está acima do VVR — sem cobrança indevida neste caso.</div>
+    `}
+  `;
+
+  document.getElementById('resultado').style.display = 'block';
+  document.getElementById('resultado').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ── Utilitários ──────────────────────────────────────────────────
+function loading(msg) {
+  document.getElementById('loadingMsg').textContent = msg;
+  document.getElementById('loading').style.display  = 'block';
+  document.getElementById('btnCalcular').disabled   = true;
+}
+function esconderLoading() {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('btnCalcular').disabled  = false;
+}
+function erro(msg) {
+  const el = document.getElementById('erro');
+  el.textContent   = '⚠️ ' + msg;
+  el.style.display = 'block';
+}
+function limpar() {
+  document.getElementById('resultado').style.display = 'none';
+  document.getElementById('erro').style.display      = 'none';
+  document.getElementById('addrOptions').style.display = 'none';
+  sqlSelecionado = null;
+}
+
+// Reseta o SQL se o usuário muda o endereço
+document.getElementById('inputEndereco').addEventListener('input', () => {
+  sqlSelecionado = null;
+  document.getElementById('addrOptions').style.display = 'none';
+});
+</script>
+
+</body>
+</html>
